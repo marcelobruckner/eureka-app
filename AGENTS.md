@@ -40,12 +40,13 @@ Use este plano como acompanhamento incremental do projeto. Ao concluir uma fase,
 
 ### Fase 1: Base do projeto
 
-Status: `PENDENTE`
+Status: `CONCLUIDA`
 
 - Criar projeto Java 21 com Spring Boot, Maven, Thymeleaf, Bootstrap, Spring Web, Spring Data JPA, Spring Security e H2.
 - Configurar perfil local com H2.
 - Criar estrutura inicial de pacotes.
 - Adicionar estrutura inicial para scripts SQL versionados.
+- Validado com `./mvnw test`.
 
 ### Fase 2: Modelo de dominio
 
