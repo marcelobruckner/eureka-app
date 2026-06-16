@@ -61,7 +61,7 @@ Status: `CONCLUIDA`
 
 ### Fase 3: Cadastro e login
 
-Status: `PENDENTE`
+Status: `CONCLUIDA`
 
 - Implementar cadastro de aluno.
 - Implementar login com Spring Security.

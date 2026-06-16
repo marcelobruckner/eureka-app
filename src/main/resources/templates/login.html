@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrar | eureka-app</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="bg-light">
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-7 col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    <h1 class="h3 mb-2">eureka-app</h1>
+                    <p class="text-muted mb-4">Acesse sua area de aluno.</p>
+
+                    <div class="alert alert-success" th:if="${param.cadastro}">
+                        Cadastro realizado com sucesso. Entre com seu usuario e senha.
+                    </div>
+                    <div class="alert alert-info" th:if="${param.logout}">
+                        Voce saiu da aplicacao com sucesso.
+                    </div>
+                    <div class="alert alert-danger" th:if="${param.error}">
+                        Usuario ou senha invalidos.
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <input id="usuario" name="usuario" type="text" class="form-control" autocomplete="username" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="senha" class="form-label">Senha</label>
+                            <input id="senha" name="senha" type="password" class="form-control" autocomplete="current-password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <a th:href="@{/registro}">Criar conta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
