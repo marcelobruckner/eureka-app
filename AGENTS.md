@@ -50,7 +50,7 @@ Status: `CONCLUIDA`
 
 ### Fase 2: Modelo de dominio
 
-Status: `PENDENTE`
+Status: `CONCLUIDA`
 
 - Criar entidades `Aluno`, `AnoLetivo`, `Disciplina` e `Tarefa`.
 - Criar enum de status da tarefa.
@@ -296,4 +296,3 @@ Quando o projeto Spring Boot estiver criado com Maven:
 
 - Rodar testes: `./mvnw test`
 - Rodar aplicacao: `./mvnw spring-boot:run`
-
