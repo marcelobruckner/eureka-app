@@ -64,7 +64,8 @@
                         <div class="col-12 col-md-6" th:each="disciplina : ${disciplinas}">
                             <div class="border rounded-3 p-3 bg-white">
                                 <div class="fw-semibold" th:text="${disciplina.nome}"></div>
-                                <small class="text-muted" th:text="${disciplina.anoLetivo.ano}"></small>
+                                <small class="text-muted"
+                                       th:text="${anoSelecionado != null ? anoSelecionado.ano : ''}"></small>
                             </div>
                         </div>
                         <div class="col-12">

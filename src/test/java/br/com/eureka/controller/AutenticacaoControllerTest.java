@@ -2,6 +2,12 @@ package br.com.eureka.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import br.com.eureka.model.Aluno;
+import br.com.eureka.model.AnoLetivo;
+import br.com.eureka.model.Disciplina;
+import br.com.eureka.repository.AlunoRepository;
+import br.com.eureka.repository.AnoLetivoRepository;
+import br.com.eureka.repository.DisciplinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -26,11 +32,23 @@ class AutenticacaoControllerTest {
     @Autowired
     private WebApplicationContext context;
 
+    @Autowired
+    private AlunoRepository alunoRepository;
+
+    @Autowired
+    private AnoLetivoRepository anoLetivoRepository;
+
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     void configurarMockMvc() {
         mockMvc = webAppContextSetup(context).apply(springSecurity()).build();
+        disciplinaRepository.deleteAll();
+        anoLetivoRepository.deleteAll();
+        alunoRepository.deleteAll();
     }
 
     @Test
@@ -64,6 +82,20 @@ class AutenticacaoControllerTest {
         mockMvc.perform(get("/inicio"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("ana")));
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
+    void deveExibirDashboardComAnoEDisciplinaSemFalharNaView() throws Exception {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo anoLetivo = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        disciplinaRepository.save(Disciplina.criar("Matematica", anoLetivo));
+
+        mockMvc.perform(get("/inicio"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("inicio"))
+                .andExpect(content().string(containsString("Matematica")))
+                .andExpect(content().string(containsString("2026")));
     }
 
     @Test

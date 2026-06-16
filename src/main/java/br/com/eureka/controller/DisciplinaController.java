@@ -56,6 +56,7 @@ public class DisciplinaController {
             return "disciplinas";
         }
 
+        disciplinaService.cadastrar(usuario, form);
         return "redirect:/anos-letivos/" + form.getAnoLetivoId() + "/disciplinas";
     }
 }

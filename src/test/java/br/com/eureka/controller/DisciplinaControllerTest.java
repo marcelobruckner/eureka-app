@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class DisciplinaControllerTest {
@@ -75,5 +76,7 @@ class DisciplinaControllerTest {
                         .param("anoLetivoId", ano.getId().toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/anos-letivos/" + ano.getId() + "/disciplinas"));
+
+        assertEquals(1, disciplinaRepository.findByAnoLetivoIdAndExcluidoFalseOrderByNomeAsc(ano.getId()).size());
     }
 }
