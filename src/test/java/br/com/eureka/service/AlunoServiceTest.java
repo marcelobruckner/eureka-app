@@ -3,6 +3,8 @@ package br.com.eureka.service;
 import br.com.eureka.form.CadastroAlunoForm;
 import br.com.eureka.model.Aluno;
 import br.com.eureka.repository.AlunoRepository;
+import br.com.eureka.repository.AnoLetivoRepository;
+import br.com.eureka.repository.DisciplinaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,10 +27,18 @@ class AlunoServiceTest {
     private AlunoRepository alunoRepository;
 
     @Autowired
+    private AnoLetivoRepository anoLetivoRepository;
+
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void limparDados() {
+        disciplinaRepository.deleteAll();
+        anoLetivoRepository.deleteAll();
         alunoRepository.deleteAll();
     }
 

@@ -70,7 +70,7 @@ Status: `CONCLUIDA`
 
 ### Fase 4: Ano letivo e disciplinas
 
-Status: `PENDENTE`
+Status: `CONCLUIDA`
 
 - Criar telas para cadastrar e listar anos letivos.
 - Criar telas para cadastrar e listar disciplinas por ano letivo.
