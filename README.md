@@ -63,7 +63,7 @@ Sistema web para gestao de tarefas escolares de alunos.
 
 - Fase 1: Concluida
 - Fase 2: Concluida
-- Fase 3: Pendente
+- Fase 3: Concluida
 - Fase 4: Pendente
 - Fase 5: Pendente
 - Fase 6: Pendente
