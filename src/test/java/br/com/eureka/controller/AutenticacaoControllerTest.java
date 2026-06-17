@@ -127,6 +127,23 @@ class AutenticacaoControllerTest {
 
     @Test
     @WithMockUser(username = "ana")
+    void deveExibirComboCompactoQuandoExistiremMaisDeUmAnoLetivo() throws Exception {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        anoLetivoRepository.save(AnoLetivo.criar(2025, aluno));
+        anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+
+        mockMvc.perform(get("/inicio"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("inicio"))
+                .andExpect(content().string(containsString("Linha do tempo compacta")))
+                .andExpect(content().string(containsString("Ano letivo")))
+                .andExpect(content().string(containsString("Abrir")))
+                .andExpect(content().string(containsString("2025")))
+                .andExpect(content().string(containsString("2026")));
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
     void deveFiltrarDashboardPorSituacaoDaTarefa() throws Exception {
         Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
         AnoLetivo anoLetivo = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
