@@ -100,6 +100,31 @@ body::before {
     box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
 }
 
+.dashboard-page .summary-grid {
+    gap: 0.75rem;
+}
+
+.dashboard-page .summary-card {
+    padding: 0.85rem 0.9rem;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+}
+
+.dashboard-page .summary-value {
+    font-size: 1.35rem;
+}
+
+.dashboard-page .hero-meta-value {
+    font-size: 1.55rem;
+}
+
+.dashboard-page .task-card .card-body {
+    padding: 0.9rem !important;
+}
+
+.dashboard-page .empty-state {
+    padding: 1rem;
+}
+
 .dashboard-year-form {
     min-width: min(100%, 28rem);
 }
