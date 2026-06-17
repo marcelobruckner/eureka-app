@@ -5,6 +5,7 @@ import br.com.eureka.model.Aluno;
 import br.com.eureka.repository.AlunoRepository;
 import br.com.eureka.repository.AnoLetivoRepository;
 import br.com.eureka.repository.DisciplinaRepository;
+import br.com.eureka.repository.TarefaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,10 +34,14 @@ class AlunoServiceTest {
     private DisciplinaRepository disciplinaRepository;
 
     @Autowired
+    private TarefaRepository tarefaRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void limparDados() {
+        tarefaRepository.deleteAll();
         disciplinaRepository.deleteAll();
         anoLetivoRepository.deleteAll();
         alunoRepository.deleteAll();

@@ -58,9 +58,15 @@
                     <h2 class="h5 mb-3">Disciplinas cadastradas</h2>
                     <div class="list-group">
                         <div class="list-group-item" th:each="disciplina : ${disciplinas}">
-                            <div class="fw-semibold" th:text="${disciplina.nome}"></div>
-                            <small class="text-muted"
-                                   th:text="${anoSelecionado != null ? anoSelecionado.ano : ''}"></small>
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <div>
+                                    <div class="fw-semibold" th:text="${disciplina.nome}"></div>
+                                    <small class="text-muted"
+                                           th:text="${anoSelecionado != null ? anoSelecionado.ano : ''}"></small>
+                                </div>
+                                <a class="btn btn-sm btn-outline-primary"
+                                   th:href="@{|/disciplinas/${disciplina.id}/tarefas|}">Tarefas</a>
+                            </div>
                         </div>
                         <div class="list-group-item text-muted" th:if="${#lists.isEmpty(disciplinas)}">
                             Nenhuma disciplina cadastrada para este ano.

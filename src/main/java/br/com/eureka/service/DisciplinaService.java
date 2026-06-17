@@ -29,6 +29,11 @@ public class DisciplinaService {
         return disciplinaRepository.findByAnoLetivoIdAndExcluidoFalseOrderByNomeAsc(anoLetivoId);
     }
 
+    public Disciplina obterDoAluno(String usuario, Long disciplinaId) {
+        return disciplinaRepository.findByIdAndAnoLetivoAlunoUsuarioAndExcluidoFalse(disciplinaId, usuario)
+                .orElseThrow(() -> new IllegalArgumentException("Disciplina nao encontrada"));
+    }
+
     @Transactional
     public Disciplina cadastrar(String usuario, DisciplinaForm form) {
         AnoLetivo anoLetivo = anoLetivoService.obterDoAluno(usuario, form.getAnoLetivoId());

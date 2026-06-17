@@ -7,6 +7,7 @@ import br.com.eureka.model.Disciplina;
 import br.com.eureka.repository.AlunoRepository;
 import br.com.eureka.repository.AnoLetivoRepository;
 import br.com.eureka.repository.DisciplinaRepository;
+import br.com.eureka.repository.TarefaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,12 @@ class DisciplinaServiceTest {
     @Autowired
     private DisciplinaRepository disciplinaRepository;
 
+    @Autowired
+    private TarefaRepository tarefaRepository;
+
     @BeforeEach
     void limparDados() {
+        tarefaRepository.deleteAll();
         disciplinaRepository.deleteAll();
         anoLetivoRepository.deleteAll();
         alunoRepository.deleteAll();

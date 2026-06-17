@@ -79,7 +79,7 @@ Status: `CONCLUIDA`
 
 ### Fase 5: Tarefas
 
-Status: `PENDENTE`
+Status: `CONCLUIDA`
 
 - Criar tarefas por disciplina.
 - Listar tarefas com status.

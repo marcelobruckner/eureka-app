@@ -23,6 +23,7 @@ import br.com.eureka.model.AnoLetivo;
 import br.com.eureka.repository.AlunoRepository;
 import br.com.eureka.repository.AnoLetivoRepository;
 import br.com.eureka.repository.DisciplinaRepository;
+import br.com.eureka.repository.TarefaRepository;
 
 @SpringBootTest
 class AnoLetivoControllerTest {
@@ -39,11 +40,15 @@ class AnoLetivoControllerTest {
     @Autowired
     private DisciplinaRepository disciplinaRepository;
 
+    @Autowired
+    private TarefaRepository tarefaRepository;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     void configurarMockMvc() {
         mockMvc = webAppContextSetup(context).apply(springSecurity()).build();
+        tarefaRepository.deleteAll();
         disciplinaRepository.deleteAll();
         anoLetivoRepository.deleteAll();
         alunoRepository.deleteAll();
