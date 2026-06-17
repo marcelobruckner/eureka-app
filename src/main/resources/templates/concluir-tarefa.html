@@ -59,11 +59,16 @@
                           th:object="${concluirTarefaForm}"
                           method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <div class="alert alert-danger py-2" th:if="${#fields.hasAnyErrors()}">
+                            Corrija a data informada para concluir a tarefa.
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="dataEntrega">Data de entrega</label>
-                            <input id="dataEntrega" type="date" class="form-control form-control-lg" th:field="*{dataEntrega}">
-                            <div class="text-danger small" th:errors="*{dataEntrega}"></div>
+                            <input id="dataEntrega" type="date" class="form-control form-control-lg"
+                                   th:classappend="${#fields.hasErrors('dataEntrega')} ? ' is-invalid' : ''"
+                                   th:field="*{dataEntrega}">
+                            <div class="invalid-feedback d-block" th:errors="*{dataEntrega}"></div>
                         </div>
 
                         <div class="d-flex flex-column flex-md-row gap-2">

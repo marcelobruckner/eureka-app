@@ -54,18 +54,24 @@
                     <form th:action="@{/tarefas}" th:object="${tarefaForm}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         <input type="hidden" th:field="*{disciplinaId}">
+                        <div class="alert alert-danger py-2" th:if="${#fields.hasAnyErrors()}">
+                            Corrija os campos destacados para salvar a tarefa.
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="nome">Nome</label>
-                            <input id="nome" type="text" class="form-control form-control-lg" th:field="*{nome}">
-                            <div class="text-danger small" th:errors="*{nome}"></div>
+                            <input id="nome" type="text" class="form-control form-control-lg"
+                                   th:classappend="${#fields.hasErrors('nome')} ? ' is-invalid' : ''"
+                                   th:field="*{nome}">
+                            <div class="invalid-feedback d-block" th:errors="*{nome}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="dataPrevistaEntrega">Data prevista de entrega</label>
                             <input id="dataPrevistaEntrega" type="date" class="form-control form-control-lg"
+                                   th:classappend="${#fields.hasErrors('dataPrevistaEntrega')} ? ' is-invalid' : ''"
                                    th:field="*{dataPrevistaEntrega}">
-                            <div class="text-danger small" th:errors="*{dataPrevistaEntrega}"></div>
+                            <div class="invalid-feedback d-block" th:errors="*{dataPrevistaEntrega}"></div>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-lg w-100">Salvar</button>
@@ -88,6 +94,9 @@
                     <div class="empty-state mb-3" th:if="${#lists.isEmpty(tarefas)}">
                         <div class="fw-semibold">Nenhuma tarefa cadastrada para esta disciplina.</div>
                         <div class="text-muted small mt-1">Crie a primeira tarefa para começar o acompanhamento do prazo.</div>
+                        <div class="mt-3">
+                            <span class="badge text-bg-primary">Use o formulário ao lado</span>
+                        </div>
                     </div>
 
                     <div class="list-group compact-list" th:if="${!#lists.isEmpty(tarefas)}">

@@ -88,6 +88,7 @@ class DisciplinaControllerTest {
                 .andExpect(view().name("disciplinas"))
                 .andExpect(model().attribute("disciplinaForm", hasProperty("anoLetivoId", is(ano.getId()))))
                 .andExpect(content().string(containsString("Matematica")))
+                .andExpect(content().string(containsString("Corrija os campos destacados para salvar a disciplina.")))
                 .andExpect(content().string(containsString("Nome e obrigatorio")));
     }
 
@@ -106,6 +107,7 @@ class DisciplinaControllerTest {
                 .andExpect(view().name("disciplinas"))
                 .andExpect(model().attribute("disciplinaForm", hasProperty("anoSelecionadoId", is(ano.getId()))))
                 .andExpect(content().string(containsString("Matematica")))
+                .andExpect(content().string(containsString("Corrija os campos destacados para salvar a disciplina.")))
                 .andExpect(content().string(containsString("Ano letivo e obrigatorio")));
     }
 

@@ -109,7 +109,16 @@ Status: `CONCLUIDA`
 - Criar estados vazios mais uteis e orientados a acao.
 - Ajustar a leitura visual de prazos, status e cards em todo o fluxo web.
 
-### Fase 8: Preparacao para PostgreSQL
+### Fase 8: Refinamento
+
+Status: `CONCLUIDA`
+
+- Melhorar validacoes de formulario.
+- Melhorar mensagens de erro.
+- Ajustar layout Thymeleaf.
+- Adicionar testes de service/controller onde fizer sentido.
+
+### Fase 9: Preparacao para PostgreSQL
 
 Status: `PENDENTE`
 
@@ -117,15 +126,6 @@ Status: `PENDENTE`
 - Criar perfil/configuracao para PostgreSQL.
 - Garantir que o sistema nao dependa de `ddl-auto` fora do H2.
 - Testar criacao do banco usando apenas scripts SQL versionados.
-
-### Fase 9: Refinamento
-
-Status: `PENDENTE`
-
-- Melhorar validacoes de formulario.
-- Melhorar mensagens de erro.
-- Ajustar layout Thymeleaf.
-- Adicionar testes de service/controller onde fizer sentido.
 
 ## Modelo de dominio esperado
 

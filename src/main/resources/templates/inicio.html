@@ -159,14 +159,19 @@
                     <div class="empty-state" th:if="${anoSelecionado == null and #lists.isEmpty(tarefasPorDisciplina)}">
                         <div class="fw-semibold">Nenhum ano letivo cadastrado.</div>
                         <div class="text-muted small mt-1">Cadastre um ano letivo para visualizar disciplinas e tarefas.</div>
+                        <a class="btn btn-sm btn-primary mt-3" th:href="@{/anos-letivos}">Cadastrar ano letivo</a>
                     </div>
                     <div class="empty-state" th:if="${anoSelecionado != null and !temTarefas and !#lists.isEmpty(tarefasPorDisciplina)}">
                         <div class="fw-semibold">Nenhuma tarefa corresponde ao filtro selecionado.</div>
                         <div class="text-muted small mt-1">Tente a opção “Todas” para voltar a ver o conjunto completo.</div>
+                        <a class="btn btn-sm btn-outline-primary mt-3"
+                           th:href="@{|/inicio?anoLetivoId=${anoSelecionado.id}&situacaoTarefa=TODAS|}">Ver todas</a>
                     </div>
                     <div class="empty-state" th:if="${anoSelecionado != null and #lists.isEmpty(tarefasPorDisciplina)}">
                         <div class="fw-semibold">Nenhuma disciplina cadastrada para o ano selecionado.</div>
                         <div class="text-muted small mt-1">Abra a tela de disciplinas para criar o primeiro registro.</div>
+                        <a class="btn btn-sm btn-primary mt-3"
+                           th:href="@{|/anos-letivos/${anoSelecionado.id}/disciplinas|}">Cadastrar disciplina</a>
                     </div>
                 </div>
             </div>

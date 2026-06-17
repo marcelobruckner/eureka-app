@@ -104,7 +104,22 @@ class TarefaControllerTest {
                         .param("disciplinaId", disciplina.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tarefas"))
+                .andExpect(content().string(containsString("Corrija os campos destacados para salvar a tarefa.")))
                 .andExpect(content().string(containsString("Nome e obrigatorio")));
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
+    void deveExibirErroAoTentarConcluirSemData() throws Exception {
+        Disciplina disciplina = criarDisciplinaDaAna();
+        Tarefa tarefa = criarTarefa(disciplina, "Lista 1", LocalDate.now(TIME_ZONE).plusDays(1));
+
+        mockMvc.perform(post("/tarefas/" + tarefa.getId() + "/concluir")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("concluir-tarefa"))
+                .andExpect(content().string(containsString("Corrija a data informada para concluir a tarefa.")))
+                .andExpect(content().string(containsString("Data de entrega e obrigatoria")));
     }
 
     @Test

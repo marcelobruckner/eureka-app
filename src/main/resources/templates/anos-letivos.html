@@ -37,10 +37,15 @@
                     <h2 class="h4 mt-2 mb-3">Cadastrar ano letivo</h2>
                     <form th:action="@{/anos-letivos}" th:object="${anoLetivoForm}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <div class="alert alert-danger py-2" th:if="${#fields.hasAnyErrors()}">
+                            Corrija os campos destacados para salvar o ano letivo.
+                        </div>
                         <div class="mb-3">
                             <label class="form-label" for="ano">Ano</label>
-                            <input id="ano" type="number" class="form-control form-control-lg" th:field="*{ano}">
-                            <div class="text-danger small" th:errors="*{ano}"></div>
+                            <input id="ano" type="number" class="form-control form-control-lg"
+                                   th:classappend="${#fields.hasErrors('ano')} ? ' is-invalid' : ''"
+                                   th:field="*{ano}">
+                            <div class="invalid-feedback d-block" th:errors="*{ano}"></div>
                         </div>
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary btn-lg flex-grow-1">Salvar</button>
@@ -64,6 +69,7 @@
                     <div class="empty-state mb-3" th:if="${#lists.isEmpty(anosLetivos)}">
                         <div class="fw-semibold">Nenhum ano letivo cadastrado.</div>
                         <div class="text-muted small mt-1">Cadastre o primeiro ano para liberar disciplinas e tarefas.</div>
+                        <a class="btn btn-sm btn-primary mt-3" th:href="@{/inicio}">Voltar ao dashboard</a>
                     </div>
 
                     <div class="list-group compact-list" th:if="${!#lists.isEmpty(anosLetivos)}">

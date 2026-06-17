@@ -79,4 +79,19 @@ class AnoLetivoControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/anos-letivos"));
     }
+
+    @Test
+    @WithMockUser(username = "ana")
+    void deveExibirResumoDeErroAoTentarSalvarAnoInvalido() throws Exception {
+        alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+
+        mockMvc.perform(post("/anos-letivos")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("anos-letivos"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+                        .string(containsString("Corrija os campos destacados para salvar o ano letivo.")))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+                        .string(containsString("is-invalid")));
+    }
 }
