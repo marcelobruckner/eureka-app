@@ -120,6 +120,24 @@ class TarefaServiceTest {
     }
 
     @Test
+    void deveManterOrdemDeCriacaoDasTarefasNoDashboard() {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo anoLetivo = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        Disciplina matematica = disciplinaRepository.save(Disciplina.criar("Matematica", anoLetivo));
+
+        tarefaRepository.save(Tarefa.criar("Mais antiga", LocalDate.of(2026, 6, 20), matematica,
+                Clock.fixed(Instant.parse("2026-06-15T12:00:00Z"), TIME_ZONE)));
+        tarefaRepository.save(Tarefa.criar("Mais nova", LocalDate.of(2026, 6, 18), matematica,
+                Clock.fixed(Instant.parse("2026-06-16T12:00:00Z"), TIME_ZONE)));
+
+        List<DisciplinaTarefasView> blocos = tarefaService.listarAgrupadasPorAnoLetivo("ana", anoLetivo.getId());
+
+        assertEquals(2, blocos.get(0).tarefas().size());
+        assertEquals("Mais antiga", blocos.get(0).tarefas().get(0).nome());
+        assertEquals("Mais nova", blocos.get(0).tarefas().get(1).nome());
+    }
+
+    @Test
     void deveFiltrarTarefasAgrupadasPorSituacao() {
         Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
         AnoLetivo anoLetivo = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));

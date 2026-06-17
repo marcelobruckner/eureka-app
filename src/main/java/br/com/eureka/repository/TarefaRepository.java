@@ -18,7 +18,7 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
             where al.aluno.usuario = :usuario
               and d.id = :disciplinaId
               and t.excluido = false
-            order by t.dataPrevistaEntrega asc, t.nome asc
+            order by t.dataCriacao asc, t.id asc
             """)
     List<Tarefa> findByDisciplinaAndUsuarioOrderByDataPrevistaEntregaAscNomeAsc(
             @Param("usuario") String usuario,
@@ -33,7 +33,7 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
             where al.aluno.usuario = :usuario
               and al.id = :anoLetivoId
               and t.excluido = false
-            order by d.nome asc, t.dataPrevistaEntrega asc, t.nome asc
+            order by d.nome asc, t.dataCriacao asc, t.id asc
             """)
     List<Tarefa> findByAnoLetivoAndUsuarioOrderByDisciplinaNomeAscDataPrevistaEntregaAscNomeAsc(
             @Param("usuario") String usuario,
