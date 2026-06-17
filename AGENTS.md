@@ -15,7 +15,7 @@ O sistema deve permitir que um aluno se cadastre, faca login e acompanhe suas di
 - Cadastro e consulta de tarefas por disciplina.
 - Encerramento/conclusao de tarefas com data de entrega.
 - Identificacao automatica de tarefa entregue com atraso quando a data de entrega for posterior a data prevista.
-- Dashboard inicial apos login com anos letivos, disciplinas, tarefas e status.
+- Dashboard inicial apos login com anos letivos, disciplinas, tarefas e status, exibindo as tarefas dentro dos cards das disciplinas sem duplicar informacoes em outro bloco.
 
 ## Decisoes assumidas
 

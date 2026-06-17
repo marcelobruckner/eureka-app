@@ -60,69 +60,54 @@
                               th:text="${'Ano ' + anoSelecionado.ano}"></span>
                     </div>
 
-                    <div class="row g-3 mb-4">
-                        <div class="col-12 col-md-6" th:each="disciplina : ${disciplinas}">
-                            <div class="border rounded-3 p-3 bg-white h-100">
-                                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                                    <div class="fw-semibold" th:text="${disciplina.nome}"></div>
-                                    <a class="btn btn-sm btn-outline-primary"
-                                       th:href="@{|/disciplinas/${disciplina.id}/tarefas|}">Tarefas</a>
-                                </div>
-                                <small class="text-muted"
-                                       th:text="${anoSelecionado != null ? anoSelecionado.ano : ''}"></small>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="alert alert-light border mb-0" th:if="${#lists.isEmpty(disciplinas)}">
-                                Nenhuma disciplina cadastrada para o ano selecionado.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-                        <h3 class="h6 mb-0 text-uppercase text-muted">Tarefas por disciplina</h3>
-                        <small class="text-muted" th:text="${dataReferencia}"></small>
-                    </div>
-
-                    <div class="vstack gap-3" th:if="${!#lists.isEmpty(tarefasPorDisciplina)}">
-                        <div class="border rounded-3 p-3 bg-white" th:each="bloco : ${tarefasPorDisciplina}">
-                            <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-                                <div class="fw-semibold" th:text="${bloco.disciplinaNome}"></div>
-                                <a class="btn btn-sm btn-outline-primary"
-                                   th:href="@{|/disciplinas/${bloco.disciplinaId}/tarefas|}">Abrir</a>
-                            </div>
-
-                            <div class="list-group list-group-flush" th:if="${!#lists.isEmpty(bloco.tarefas)}">
-                                <div class="list-group-item px-0"
-                                     th:each="tarefa : ${bloco.tarefas}"
-                                     th:classappend="${tarefa.vencida} ? ' bg-danger-subtle' : ''">
-                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div class="row g-3" th:if="${!#lists.isEmpty(tarefasPorDisciplina)}">
+                        <div class="col-12 col-md-6" th:each="bloco : ${tarefasPorDisciplina}">
+                            <div class="card border h-100">
+                                <div class="card-body p-3 d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
                                         <div>
-                                            <div class="fw-semibold" th:text="${tarefa.nome}"></div>
+                                            <div class="fw-semibold" th:text="${bloco.disciplinaNome}"></div>
                                             <small class="text-muted"
-                                                   th:text="${'Prevista: ' + tarefa.dataPrevistaEntrega}"></small>
-                                            <div class="small"
-                                                 th:text="${tarefa.dataEntrega != null ? 'Entregue em: ' + tarefa.dataEntrega : 'Pendente'}"></div>
+                                                   th:text="${'Ano ' + anoSelecionado.ano}"></small>
                                         </div>
-                                        <div class="text-end">
-                                            <span class="badge"
-                                                  th:classappend="${tarefa.status.name() == 'PENDENTE'} ? ' text-bg-warning' : (${tarefa.status.name() == 'ENTREGUE'} ? ' text-bg-success' : ' text-bg-danger')"
-                                                  th:text="${tarefa.status}"></span>
-                                            <div class="small text-muted mt-1"
-                                                 th:text="${tarefa.vencida ? 'Vencida' : tarefa.situacaoPrazo}"></div>
+                                        <a class="btn btn-sm btn-outline-primary"
+                                           th:href="@{|/disciplinas/${bloco.disciplinaId}/tarefas|}">Abrir</a>
+                                    </div>
+
+                                    <div class="list-group list-group-flush flex-grow-1"
+                                         th:if="${!#lists.isEmpty(bloco.tarefas)}">
+                                        <div class="list-group-item px-0"
+                                             th:each="tarefa : ${bloco.tarefas}"
+                                             th:classappend="${tarefa.vencida} ? ' bg-danger-subtle' : ''">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <div class="fw-semibold" th:text="${tarefa.nome}"></div>
+                                                    <small class="text-muted"
+                                                           th:text="${'Prevista: ' + tarefa.dataPrevistaEntrega}"></small>
+                                                    <div class="small"
+                                                         th:text="${tarefa.dataEntrega != null ? 'Entregue em: ' + tarefa.dataEntrega : 'Pendente'}"></div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <span class="badge"
+                                                          th:classappend="${tarefa.status.name() == 'PENDENTE'} ? ' text-bg-warning' : (${tarefa.status.name() == 'ENTREGUE'} ? ' text-bg-success' : ' text-bg-danger')"
+                                                          th:text="${tarefa.status}"></span>
+                                                    <div class="small text-muted mt-1"
+                                                         th:text="${tarefa.vencida ? 'Vencida' : tarefa.situacaoPrazo}"></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="text-muted small" th:if="${#lists.isEmpty(bloco.tarefas)}">
-                                Nenhuma tarefa cadastrada para esta disciplina.
+                                    <div class="text-muted small mt-auto" th:if="${#lists.isEmpty(bloco.tarefas)}">
+                                        Nenhuma tarefa cadastrada para esta disciplina.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="alert alert-light border mb-0" th:if="${#lists.isEmpty(tarefasPorDisciplina)}">
-                        Nenhuma tarefa cadastrada para o ano selecionado.
+                        Nenhuma disciplina cadastrada para o ano selecionado.
                     </div>
                 </div>
             </div>
