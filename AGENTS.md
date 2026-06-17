@@ -33,6 +33,7 @@ O sistema deve permitir que um aluno se cadastre, faca login e acompanhe suas di
 - Frontend: Thymeleaf com Bootstrap.
 - Timezone da aplicacao: `America/Sao_Paulo`.
 - Cada fase so deve ser considerada concluida com testes passando.
+- Mensagens de commit devem ser escritas em portugues.
 
 ## Plano de implementacao
 
