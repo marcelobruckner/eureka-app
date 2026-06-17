@@ -8,9 +8,9 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="bg-light">
-<main class="container py-5 page-shell">
-    <div class="card page-hero mb-4">
-        <div class="card-body p-4 p-md-5 d-flex justify-content-between align-items-start flex-wrap gap-3">
+<main class="container py-4 page-shell compact-page">
+    <div class="card page-hero page-hero-compact mb-3">
+        <div class="card-body p-3 p-md-4 d-flex justify-content-between align-items-start flex-wrap gap-3">
             <div>
                 <span class="hero-kicker">Organização do ano</span>
                 <h1 class="hero-title mb-2">Disciplinas por ano letivo</h1>
@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <div class="summary-grid mb-4" th:if="${anoSelecionado != null}">
+    <div class="summary-grid mb-3" th:if="${anoSelecionado != null}">
         <div class="summary-card">
             <span class="summary-value" th:text="${anoSelecionado.ano}"></span>
             <span class="summary-label">ano em foco</span>
@@ -38,10 +38,10 @@
         </div>
     </div>
 
-    <div class="row g-4">
+    <div class="row g-3">
         <div class="col-12 col-lg-5">
             <div class="card shadow-sm border-0 h-100 surface-card">
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <span class="section-label">Cadastro rápido</span>
                     <h2 class="h4 mt-2 mb-3">Cadastrar disciplina</h2>
                     <form th:action="@{/disciplinas}" th:object="${disciplinaForm}" method="post">
@@ -80,8 +80,8 @@
 
         <div class="col-12 col-lg-7">
             <div class="card shadow-sm border-0 h-100 surface-card">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
                         <div>
                             <span class="section-label">Conteúdo do ano</span>
                             <h2 class="h4 mb-0 mt-2">Disciplinas cadastradas</h2>

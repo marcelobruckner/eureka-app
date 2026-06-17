@@ -101,21 +101,22 @@
                       th:text="${'Ano ' + anoSelecionado.ano}"></span>
             </div>
 
-            <form class="row g-2 align-items-end mb-3" th:action="@{/inicio}" method="get"
+            <form class="dashboard-filter d-flex flex-column flex-lg-row align-items-lg-end gap-2 mb-3"
+                  th:action="@{/inicio}" method="get"
                   th:if="${anoSelecionado != null}">
                 <input type="hidden" name="anoLetivoId" th:value="${anoSelecionado.id}">
-                <div class="col-12 col-md">
-                    <label class="form-label mb-1" for="situacaoTarefa">Situação das tarefas</label>
-                    <div class="input-group input-group-lg">
-                        <select class="form-select" id="situacaoTarefa" name="situacaoTarefa">
-                            <option th:each="filtro : ${filtrosSituacao}"
-                                    th:value="${filtro}"
-                                    th:text="${filtro.descricao}"
-                                    th:selected="${filtro == filtroSituacao}">
-                            </option>
-                        </select>
-                        <button type="submit" class="btn btn-primary">Aplicar</button>
-                    </div>
+                <label class="form-label mb-0 text-muted fw-semibold small text-nowrap" for="situacaoTarefa">
+                    Situação
+                </label>
+                <div class="input-group input-group-lg dashboard-filter-group">
+                    <select class="form-select" id="situacaoTarefa" name="situacaoTarefa">
+                        <option th:each="filtro : ${filtrosSituacao}"
+                                th:value="${filtro}"
+                                th:text="${filtro.descricao}"
+                                th:selected="${filtro == filtroSituacao}">
+                        </option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Aplicar</button>
                 </div>
             </form>
 
