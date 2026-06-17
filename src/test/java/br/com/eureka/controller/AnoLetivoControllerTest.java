@@ -63,7 +63,9 @@ class AnoLetivoControllerTest {
         mockMvc.perform(get("/anos-letivos"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("anos-letivos"))
-                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string(containsString("2026")));
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string(containsString("Anos letivos")))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string(containsString("2026")))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string(containsString("Cadastro rápido")));
     }
 
     @Test

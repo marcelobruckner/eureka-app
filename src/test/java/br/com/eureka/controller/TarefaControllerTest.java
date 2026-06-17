@@ -74,6 +74,7 @@ class TarefaControllerTest {
         mockMvc.perform(get("/disciplinas/" + disciplina.getId() + "/tarefas"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tarefas"))
+                .andExpect(content().string(containsString("tarefas na disciplina")))
                 .andExpect(content().string(containsString("Lista 1")))
                 .andExpect(content().string(containsString("Matematica")));
     }

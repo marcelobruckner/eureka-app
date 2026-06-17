@@ -1,7 +1,205 @@
+:root {
+    --eureka-ink: #132238;
+    --eureka-muted: #5c677d;
+    --eureka-surface: rgba(255, 255, 255, 0.88);
+    --eureka-surface-solid: #ffffff;
+    --eureka-border: rgba(19, 34, 56, 0.12);
+    --eureka-accent: #1d4ed8;
+    --eureka-accent-strong: #0f2f73;
+    --eureka-warm: #f59e0b;
+    --eureka-success: #0f9d58;
+    --eureka-danger: #dc2626;
+}
+
 body {
     min-height: 100vh;
+    color: var(--eureka-ink);
+    font-family: "Trebuchet MS", "Verdana", sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(29, 78, 216, 0.12), transparent 36%),
+        radial-gradient(circle at top right, rgba(245, 158, 11, 0.10), transparent 28%),
+        linear-gradient(180deg, #f8fbff 0%, #f3f6fb 42%, #eef2f7 100%);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(rgba(19, 34, 56, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(19, 34, 56, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 72%);
 }
 
 .card {
+    border-radius: 1.25rem;
+    border: 1px solid var(--eureka-border);
+}
+
+.page-shell {
+    position: relative;
+    z-index: 1;
+}
+
+.page-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #12326b 48%, #1d4ed8 100%);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.18);
+}
+
+.page-hero .text-muted,
+.page-hero .text-secondary {
+    color: rgba(248, 250, 252, 0.8) !important;
+}
+
+.page-hero .btn-outline-primary,
+.page-hero .btn-outline-secondary {
+    color: #f8fafc;
+    border-color: rgba(248, 250, 252, 0.28);
+}
+
+.page-hero .btn-outline-primary:hover,
+.page-hero .btn-outline-secondary:hover {
+    background-color: rgba(248, 250, 252, 0.14);
+    border-color: rgba(248, 250, 252, 0.5);
+    color: #ffffff;
+}
+
+.hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.8rem;
+    margin-bottom: 0.85rem;
+    border-radius: 999px;
+    background: rgba(248, 250, 252, 0.12);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+}
+
+.hero-subtitle {
+    max-width: 58ch;
+    font-size: 1.02rem;
+}
+
+.surface-card {
+    background: var(--eureka-surface);
+    backdrop-filter: blur(14px);
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.summary-card {
     border-radius: 1rem;
+    border: 1px solid var(--eureka-border);
+    background: var(--eureka-surface-solid);
+    padding: 1rem;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.summary-value {
+    display: block;
+    font-size: 1.55rem;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.summary-label {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--eureka-muted);
+    font-size: 0.88rem;
+}
+
+.empty-state {
+    border: 1px dashed var(--eureka-border);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1.25rem;
+}
+
+.section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--eureka-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.soft-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(19, 34, 56, 0.12), transparent);
+    margin: 1rem 0;
+}
+
+.status-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.status-dot::before {
+    content: "";
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.9;
+}
+
+.status-pendente {
+    color: #a16207;
+}
+
+.status-vencida {
+    color: var(--eureka-danger);
+}
+
+.status-entregue {
+    color: var(--eureka-success);
+}
+
+.status-atraso {
+    color: #b45309;
+}
+
+.compact-list .list-group-item {
+    padding-top: 0.95rem;
+    padding-bottom: 0.95rem;
+}
+
+.task-card {
+    border-radius: 1rem;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.10);
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 1.9rem;
+    }
+
+    .page-hero .btn {
+        width: 100%;
+    }
 }

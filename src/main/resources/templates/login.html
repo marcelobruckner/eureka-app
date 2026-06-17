@@ -8,13 +8,41 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="bg-light">
-<main class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-7 col-lg-5">
-            <div class="card shadow-sm border-0">
+<main class="container py-5 page-shell">
+    <div class="row g-4 align-items-stretch">
+        <div class="col-12 col-lg-6">
+            <div class="card page-hero h-100">
+                <div class="card-body p-4 p-md-5 d-flex flex-column justify-content-between h-100">
+                    <div>
+                        <span class="hero-kicker">eureka-app</span>
+                        <h1 class="hero-title mb-3">Organize o ano letivo com menos atrito.</h1>
+                        <p class="hero-subtitle mb-4">
+                            Acompanhe anos letivos, disciplinas e tarefas em um fluxo único, com foco no que o aluno precisa fazer agora.
+                        </p>
+                    </div>
+
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <span class="summary-value">1</span>
+                            <span class="summary-label">entrada para todo o fluxo</span>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-value">3</span>
+                            <span class="summary-label">passos principais visíveis</span>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-value">0</span>
+                            <span class="summary-label">informação duplicada</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-5 offset-lg-1">
+            <div class="card shadow-sm border-0 h-100 surface-card">
                 <div class="card-body p-4 p-md-5">
-                    <h1 class="h3 mb-2">eureka-app</h1>
-                    <p class="text-muted mb-4">Acesse sua area de aluno.</p>
+                    <h2 class="h4 mb-2">Entrar</h2>
+                    <p class="text-muted mb-4">Use seu usuario e senha para acessar o painel do aluno.</p>
 
                     <div class="alert alert-success" th:if="${param.cadastro}">
                         Cadastro realizado com sucesso. Entre com seu usuario e senha.
@@ -31,19 +59,22 @@
 
                         <div class="mb-3">
                             <label for="usuario" class="form-label">Usuario</label>
-                            <input id="usuario" name="usuario" type="text" class="form-control" autocomplete="username" required>
+                            <input id="usuario" name="usuario" type="text" class="form-control form-control-lg" autocomplete="username" required>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="senha" class="form-label">Senha</label>
-                            <input id="senha" name="senha" type="password" class="form-control" autocomplete="current-password" required>
+                            <input id="senha" name="senha" type="password" class="form-control form-control-lg" autocomplete="current-password" required>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Entrar</button>
                     </form>
 
-                    <div class="mt-4 text-center">
-                        <a th:href="@{/registro}">Criar conta</a>
+                    <div class="soft-divider"></div>
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <span class="text-muted">Ainda nao tem conta?</span>
+                        <a class="btn btn-outline-primary" th:href="@{/registro}">Criar conta</a>
                     </div>
                 </div>
             </div>

@@ -99,7 +99,17 @@ Status: `CONCLUIDA`
 - Adicionar filtro unico na tela para situacao da tarefa, separando internamente `status` persistido e situacao de prazo calculada.
 - Destacar visualmente pendentes, vencidas, entregues e entregues com atraso.
 
-### Fase 7: Preparacao para PostgreSQL
+### Fase 7: Refinamento de UX do fluxo
+
+Status: `CONCLUIDA`
+
+- Melhorar a hierarquia visual do dashboard e das telas principais.
+- Substituir interacoes pesadas por controles mais diretos quando fizer sentido.
+- Reduzir repeticao de informacoes e destacar melhor os proximos passos do aluno.
+- Criar estados vazios mais uteis e orientados a acao.
+- Ajustar a leitura visual de prazos, status e cards em todo o fluxo web.
+
+### Fase 8: Preparacao para PostgreSQL
 
 Status: `PENDENTE`
 
@@ -108,7 +118,7 @@ Status: `PENDENTE`
 - Garantir que o sistema nao dependa de `ddl-auto` fora do H2.
 - Testar criacao do banco usando apenas scripts SQL versionados.
 
-### Fase 8: Refinamento
+### Fase 9: Refinamento
 
 Status: `PENDENTE`
 

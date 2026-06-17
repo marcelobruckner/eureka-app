@@ -8,36 +8,55 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="bg-light">
-<main class="container py-5">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <div>
-            <h1 class="h3 mb-1">Disciplinas por ano letivo</h1>
-            <p class="text-muted mb-0" th:text="${anoSelecionado != null ? anoSelecionado.ano : ''}"></p>
+<main class="container py-5 page-shell">
+    <div class="card page-hero mb-4">
+        <div class="card-body p-4 p-md-5 d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <span class="hero-kicker">Organização do ano</span>
+                <h1 class="hero-title mb-2">Disciplinas por ano letivo</h1>
+                <p class="hero-subtitle mb-0" th:text="${anoSelecionado != null ? 'Ano ' + anoSelecionado.ano + ' selecionado para cadastro e acompanhamento.' : 'Selecione um ano letivo para ver as disciplinas.'}"></p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-secondary" th:href="@{/anos-letivos}">Anos letivos</a>
+                <a class="btn btn-outline-secondary" th:href="@{/inicio}">Dashboard</a>
+            </div>
         </div>
-        <div class="d-flex gap-2">
-            <a class="btn btn-outline-secondary" th:href="@{/anos-letivos}">Anos letivos</a>
-            <a class="btn btn-outline-secondary" th:href="@{/inicio}">Dashboard</a>
+    </div>
+
+    <div class="summary-grid mb-4" th:if="${anoSelecionado != null}">
+        <div class="summary-card">
+            <span class="summary-value" th:text="${anoSelecionado.ano}"></span>
+            <span class="summary-label">ano em foco</span>
+        </div>
+        <div class="summary-card">
+            <span class="summary-value" th:text="${#lists.size(disciplinas)}"></span>
+            <span class="summary-label">disciplinas ativas</span>
+        </div>
+        <div class="summary-card">
+            <span class="summary-value">+</span>
+            <span class="summary-label">nova disciplina no painel</span>
         </div>
     </div>
 
     <div class="row g-4">
         <div class="col-12 col-lg-5">
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 h-100 surface-card">
                 <div class="card-body p-4">
-                    <h2 class="h5 mb-3">Cadastrar disciplina</h2>
+                    <span class="section-label">Cadastro rápido</span>
+                    <h2 class="h4 mt-2 mb-3">Cadastrar disciplina</h2>
                     <form th:action="@{/disciplinas}" th:object="${disciplinaForm}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         <input type="hidden" th:field="*{anoSelecionadoId}">
 
                         <div class="mb-3">
                             <label class="form-label" for="nome">Nome</label>
-                            <input id="nome" type="text" class="form-control" th:field="*{nome}">
+                            <input id="nome" type="text" class="form-control form-control-lg" th:field="*{nome}">
                             <div class="text-danger small" th:errors="*{nome}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="anoLetivoId">Ano letivo</label>
-                            <select id="anoLetivoId" class="form-select" th:field="*{anoLetivoId}">
+                            <select id="anoLetivoId" class="form-select form-select-lg" th:field="*{anoLetivoId}">
                                 <option value="">Selecione</option>
                                 <option th:each="anoLetivo : ${anosLetivos}"
                                         th:value="${anoLetivo.id}"
@@ -46,30 +65,40 @@
                             <div class="text-danger small" th:errors="*{anoLetivoId}"></div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Salvar</button>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Salvar</button>
                     </form>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-lg-7">
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 h-100 surface-card">
                 <div class="card-body p-4">
-                    <h2 class="h5 mb-3">Disciplinas cadastradas</h2>
-                    <div class="list-group">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <div>
+                            <span class="section-label">Conteúdo do ano</span>
+                            <h2 class="h4 mb-0 mt-2">Disciplinas cadastradas</h2>
+                        </div>
+                        <span class="badge text-bg-light border text-dark" th:if="${anoSelecionado != null}"
+                              th:text="${'Ano ' + anoSelecionado.ano}"></span>
+                    </div>
+
+                    <div class="empty-state mb-3" th:if="${#lists.isEmpty(disciplinas)}">
+                        <div class="fw-semibold">Nenhuma disciplina cadastrada para este ano.</div>
+                        <div class="text-muted small mt-1">Cadastre a primeira disciplina para liberar a lista de tarefas.</div>
+                    </div>
+
+                    <div class="list-group compact-list" th:if="${!#lists.isEmpty(disciplinas)}">
                         <div class="list-group-item" th:each="disciplina : ${disciplinas}">
                             <div class="d-flex justify-content-between align-items-start gap-2">
                                 <div>
                                     <div class="fw-semibold" th:text="${disciplina.nome}"></div>
                                     <small class="text-muted"
-                                           th:text="${anoSelecionado != null ? anoSelecionado.ano : ''}"></small>
+                                           th:text="${anoSelecionado != null ? 'Ano ' + anoSelecionado.ano : ''}"></small>
                                 </div>
                                 <a class="btn btn-sm btn-outline-primary"
-                                   th:href="@{|/disciplinas/${disciplina.id}/tarefas|}">Tarefas</a>
+                                   th:href="@{|/disciplinas/${disciplina.id}/tarefas|}">Abrir tarefas</a>
                             </div>
-                        </div>
-                        <div class="list-group-item text-muted" th:if="${#lists.isEmpty(disciplinas)}">
-                            Nenhuma disciplina cadastrada para este ano.
                         </div>
                     </div>
                 </div>

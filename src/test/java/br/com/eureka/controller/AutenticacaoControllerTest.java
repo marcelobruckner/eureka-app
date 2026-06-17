@@ -69,7 +69,16 @@ class AutenticacaoControllerTest {
     void deveExibirTelaDeLogin() throws Exception {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("login"));
+                .andExpect(view().name("login"))
+                .andExpect(content().string(containsString("Organize o ano letivo")));
+    }
+
+    @Test
+    void deveExibirTelaDeCadastroComNovaApresentacao() throws Exception {
+        mockMvc.perform(get("/registro"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registro"))
+                .andExpect(content().string(containsString("Comece com um cadastro simples")));
     }
 
     @Test
@@ -110,6 +119,7 @@ class AutenticacaoControllerTest {
         mockMvc.perform(get("/inicio"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("inicio"))
+                .andExpect(content().string(containsString("Painel do aluno")))
                 .andExpect(content().string(containsString("Matematica")))
                 .andExpect(content().string(containsString("2026")))
                 .andExpect(content().string(containsString("Lista 1")));

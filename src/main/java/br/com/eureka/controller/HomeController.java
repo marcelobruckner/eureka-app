@@ -50,15 +50,20 @@ public class HomeController {
         List<DisciplinaTarefasView> tarefasPorDisciplina = anoSelecionado != null
                 ? tarefaService.listarAgrupadasPorAnoLetivo(usuario, anoSelecionado.getId(), filtroSituacao)
                 : List.of();
+        List<br.com.eureka.model.Disciplina> disciplinas = anoSelecionado != null
+                ? disciplinaService.listarDoAnoLetivo(usuario, anoSelecionado.getId())
+                : List.of();
+        int quantidadeTarefas = tarefasPorDisciplina.stream().mapToInt(bloco -> bloco.tarefas().size()).sum();
 
         model.addAttribute("usuarioLogado", usuario);
         model.addAttribute("anosLetivos", anosLetivos);
         model.addAttribute("anoSelecionado", anoSelecionado);
         model.addAttribute("filtroSituacao", filtroSituacao);
         model.addAttribute("filtrosSituacao", List.of(FiltroSituacaoTarefa.values()));
-        model.addAttribute("disciplinas", anoSelecionado != null
-                ? disciplinaService.listarDoAnoLetivo(usuario, anoSelecionado.getId())
-                : List.of());
+        model.addAttribute("quantidadeAnosLetivos", anosLetivos.size());
+        model.addAttribute("quantidadeDisciplinas", disciplinas.size());
+        model.addAttribute("quantidadeTarefas", quantidadeTarefas);
+        model.addAttribute("disciplinas", disciplinas);
         model.addAttribute("tarefasPorDisciplina", tarefasPorDisciplina);
         model.addAttribute("temTarefas", tarefasPorDisciplina.stream().anyMatch(bloco -> !bloco.tarefas().isEmpty()));
         return "inicio";

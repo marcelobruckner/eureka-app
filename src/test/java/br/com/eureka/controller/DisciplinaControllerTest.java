@@ -70,6 +70,7 @@ class DisciplinaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("disciplinas"))
                 .andExpect(model().attribute("disciplinaForm", hasProperty("anoLetivoId", is(ano.getId()))))
+                .andExpect(content().string(containsString("Conteúdo do ano")))
                 .andExpect(content().string(containsString("Matematica")));
     }
 

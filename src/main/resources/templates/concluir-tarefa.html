@@ -8,30 +8,45 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="bg-light">
-<main class="container py-5">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <div>
-            <h1 class="h3 mb-1">Concluir tarefa</h1>
-            <p class="text-muted mb-0" th:text="${tarefa.nome}"></p>
-        </div>
-        <div class="d-flex gap-2">
-            <a class="btn btn-outline-secondary"
-               th:href="@{|/disciplinas/${tarefa.disciplina.id}/tarefas|}">Voltar</a>
-            <a class="btn btn-outline-secondary" th:href="@{/inicio}">Dashboard</a>
+<main class="container py-5 page-shell">
+    <div class="card page-hero mb-4">
+        <div class="card-body p-4 p-md-5 d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <span class="hero-kicker">Confirmação de entrega</span>
+                <h1 class="hero-title mb-2">Concluir tarefa</h1>
+                <p class="hero-subtitle mb-0" th:text="${tarefa.nome}"></p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-secondary"
+                   th:href="@{|/disciplinas/${tarefa.disciplina.id}/tarefas|}">Voltar</a>
+                <a class="btn btn-outline-secondary" th:href="@{/inicio}">Dashboard</a>
+            </div>
         </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-12 col-lg-7">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <div class="mb-4">
-                        <div class="small text-muted">Disciplina</div>
-                        <div class="fw-semibold" th:text="${tarefa.disciplina.nome}"></div>
-                        <div class="small text-muted mt-2">
-                            <span th:text="${'Criada em ' + tarefa.dataCriacao}"></span>
-                            <span th:text="${' | Prevista: ' + tarefa.dataPrevistaEntrega}"></span>
-                            <span th:text="${' | Status: ' + tarefa.status}"></span>
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm border-0 surface-card">
+                <div class="card-body p-4 p-md-5">
+                    <div class="summary-grid mb-4">
+                        <div class="summary-card">
+                            <span class="summary-value" th:text="${tarefa.disciplina.nome}"></span>
+                            <span class="summary-label">disciplina</span>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-value" th:text="${tarefa.dataPrevistaEntrega}"></span>
+                            <span class="summary-label">data prevista</span>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-value" th:text="${tarefa.status}"></span>
+                            <span class="summary-label">status atual</span>
+                        </div>
+                    </div>
+
+                    <div class="empty-state mb-4">
+                        <div class="fw-semibold">Antes de concluir, revise o prazo.</div>
+                        <div class="text-muted small mt-1">
+                            A data informada aqui define se a tarefa será registrada como entregue ou entregue com atraso.
                         </div>
                     </div>
 
@@ -47,11 +62,15 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="dataEntrega">Data de entrega</label>
-                            <input id="dataEntrega" type="date" class="form-control" th:field="*{dataEntrega}">
+                            <input id="dataEntrega" type="date" class="form-control form-control-lg" th:field="*{dataEntrega}">
                             <div class="text-danger small" th:errors="*{dataEntrega}"></div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Concluir</button>
+                        <div class="d-flex flex-column flex-md-row gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Concluir</button>
+                            <a class="btn btn-outline-secondary btn-lg"
+                               th:href="@{|/disciplinas/${tarefa.disciplina.id}/tarefas|}">Cancelar</a>
+                        </div>
                     </form>
                 </div>
             </div>
