@@ -3,6 +3,7 @@ package br.com.eureka.service;
 import br.com.eureka.form.AnoLetivoForm;
 import br.com.eureka.model.Aluno;
 import br.com.eureka.model.AnoLetivo;
+import br.com.eureka.model.Disciplina;
 import br.com.eureka.repository.AlunoRepository;
 import br.com.eureka.repository.AnoLetivoRepository;
 import br.com.eureka.repository.DisciplinaRepository;
@@ -68,5 +69,25 @@ class AnoLetivoServiceTest {
         anoLetivoService.cadastrar("ana", form);
 
         assertThrows(IllegalArgumentException.class, () -> anoLetivoService.cadastrar("ana", form));
+    }
+
+    @Test
+    void deveExcluirAnoLetivoSemDisciplinasVinculadas() {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo ano = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+
+        anoLetivoService.excluir("ana", ano.getId());
+
+        assertEquals(0, anoLetivoService.listarDoAluno("ana").size());
+        assertTrue(anoLetivoRepository.findByIdAndAlunoUsuarioAndExcluidoFalse(ano.getId(), "ana").isEmpty());
+    }
+
+    @Test
+    void deveBloquearExclusaoDeAnoLetivoComDisciplinasAtivas() {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo ano = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        disciplinaRepository.save(Disciplina.criar("Matematica", ano));
+
+        assertThrows(IllegalArgumentException.class, () -> anoLetivoService.excluir("ana", ano.getId()));
     }
 }

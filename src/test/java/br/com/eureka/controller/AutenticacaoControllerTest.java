@@ -102,9 +102,10 @@ class AutenticacaoControllerTest {
     @Test
     @WithMockUser(username = "ana")
     void devePermitirAcessoAAreaProtegida() throws Exception {
+        alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
         mockMvc.perform(get("/inicio"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("ana")));
+                .andExpect(content().string(containsString("Painel do aluno")));
     }
 
     @Test
@@ -120,6 +121,7 @@ class AutenticacaoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("inicio"))
                 .andExpect(content().string(containsString("Painel do aluno")))
+                .andExpect(content().string(containsString("Ana")))
                 .andExpect(content().string(containsString("Matematica")))
                 .andExpect(content().string(containsString("2026")))
                 .andExpect(content().string(containsString("Lista 1")));

@@ -30,4 +30,6 @@ public interface DisciplinaRepository extends JpaRepository<Disciplina, Long> {
     );
 
     boolean existsByAnoLetivoAndNomeIgnoreCaseAndExcluidoFalse(AnoLetivo anoLetivo, String nome);
+
+    boolean existsByAnoLetivoAndExcluidoFalse(AnoLetivo anoLetivo);
 }

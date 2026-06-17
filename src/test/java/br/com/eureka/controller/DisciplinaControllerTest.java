@@ -3,6 +3,7 @@ package br.com.eureka.controller;
 import br.com.eureka.model.Aluno;
 import br.com.eureka.model.AnoLetivo;
 import br.com.eureka.model.Disciplina;
+import br.com.eureka.model.Tarefa;
 import br.com.eureka.repository.AlunoRepository;
 import br.com.eureka.repository.AnoLetivoRepository;
 import br.com.eureka.repository.DisciplinaRepository;
@@ -14,6 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasProperty;
@@ -47,6 +53,8 @@ class DisciplinaControllerTest {
 
     @Autowired
     private TarefaRepository tarefaRepository;
+
+    private static final ZoneId TIME_ZONE = ZoneId.of("America/Sao_Paulo");
 
     private MockMvc mockMvc;
 
@@ -125,5 +133,40 @@ class DisciplinaControllerTest {
                 .andExpect(redirectedUrl("/anos-letivos/" + ano.getId() + "/disciplinas"));
 
         assertEquals(1, disciplinaRepository.findByAnoLetivoIdAndExcluidoFalseOrderByNomeAsc(ano.getId()).size());
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
+    void deveExcluirDisciplinaSemTarefas() throws Exception {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo ano = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        Disciplina disciplina = disciplinaRepository.save(Disciplina.criar("Matematica", ano));
+
+        mockMvc.perform(post("/disciplinas/" + disciplina.getId() + "/excluir")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/anos-letivos/" + ano.getId() + "/disciplinas"));
+
+        assertEquals(0, disciplinaRepository.findByAnoLetivoIdAndExcluidoFalseOrderByNomeAsc(ano.getId()).size());
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
+    void deveExibirErroAoTentarExcluirDisciplinaComTarefas() throws Exception {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo ano = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        Disciplina disciplina = disciplinaRepository.save(Disciplina.criar("Matematica", ano));
+        tarefaRepository.save(Tarefa.criar(
+                "Lista 1",
+                LocalDate.now(TIME_ZONE).plusDays(1),
+                disciplina,
+                Clock.fixed(Instant.parse("2026-06-17T12:00:00Z"), TIME_ZONE)
+        ));
+
+        mockMvc.perform(post("/disciplinas/" + disciplina.getId() + "/excluir")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("disciplinas"))
+                .andExpect(content().string(containsString("Disciplina possui tarefas vinculadas")));
     }
 }

@@ -66,6 +66,8 @@
                         <a class="btn btn-outline-primary" th:href="@{/inicio}">Ir para o dashboard</a>
                     </div>
 
+                    <div class="alert alert-danger" th:if="${mensagemErro}" th:text="${mensagemErro}"></div>
+
                     <div class="empty-state mb-3" th:if="${#lists.isEmpty(anosLetivos)}">
                         <div class="fw-semibold">Nenhum ano letivo cadastrado.</div>
                         <div class="text-muted small mt-1">Cadastre o primeiro ano para liberar disciplinas e tarefas.</div>
@@ -79,8 +81,14 @@
                                 <div class="fw-semibold" th:text="${anoLetivo.ano}"></div>
                                 <small class="text-muted">Acesso para as disciplinas vinculadas</small>
                             </div>
-                            <a class="btn btn-outline-primary btn-sm"
-                               th:href="@{|/anos-letivos/${anoLetivo.id}/disciplinas|}">Abrir disciplinas</a>
+                            <div class="d-flex gap-2 flex-wrap justify-content-end">
+                                <a class="btn btn-outline-primary btn-sm"
+                                   th:href="@{|/anos-letivos/${anoLetivo.id}/disciplinas|}">Abrir disciplinas</a>
+                                <form th:action="@{|/anos-letivos/${anoLetivo.id}/excluir|}" method="post" class="d-inline">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Excluir</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

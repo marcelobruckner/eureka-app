@@ -90,6 +90,8 @@
                               th:text="${'Ano ' + anoSelecionado.ano}"></span>
                     </div>
 
+                    <div class="alert alert-danger" th:if="${mensagemErro}" th:text="${mensagemErro}"></div>
+
                     <div class="empty-state mb-3" th:if="${#lists.isEmpty(disciplinas)}">
                         <div class="fw-semibold">Nenhuma disciplina cadastrada para este ano.</div>
                         <div class="text-muted small mt-1">Cadastre a primeira disciplina para liberar a lista de tarefas.</div>
@@ -104,8 +106,14 @@
                                     <small class="text-muted"
                                            th:text="${anoSelecionado != null ? 'Ano ' + anoSelecionado.ano : ''}"></small>
                                 </div>
-                                <a class="btn btn-sm btn-outline-primary"
-                                   th:href="@{|/disciplinas/${disciplina.id}/tarefas|}">Abrir tarefas</a>
+                                <div class="d-flex gap-2 flex-wrap justify-content-end">
+                                    <a class="btn btn-sm btn-outline-primary"
+                                       th:href="@{|/disciplinas/${disciplina.id}/tarefas|}">Abrir tarefas</a>
+                                    <form th:action="@{|/disciplinas/${disciplina.id}/excluir|}" method="post" class="d-inline">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

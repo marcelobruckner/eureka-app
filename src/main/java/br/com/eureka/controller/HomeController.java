@@ -2,6 +2,7 @@ package br.com.eureka.controller;
 
 import br.com.eureka.model.AnoLetivo;
 import br.com.eureka.model.FiltroSituacaoTarefa;
+import br.com.eureka.service.AlunoService;
 import br.com.eureka.view.DisciplinaTarefasView;
 import br.com.eureka.service.AnoLetivoService;
 import br.com.eureka.service.DisciplinaService;
@@ -20,15 +21,18 @@ public class HomeController {
     private final AnoLetivoService anoLetivoService;
     private final DisciplinaService disciplinaService;
     private final TarefaService tarefaService;
+    private final AlunoService alunoService;
 
     public HomeController(
             AnoLetivoService anoLetivoService,
             DisciplinaService disciplinaService,
-            TarefaService tarefaService
+            TarefaService tarefaService,
+            AlunoService alunoService
     ) {
         this.anoLetivoService = anoLetivoService;
         this.disciplinaService = disciplinaService;
         this.tarefaService = tarefaService;
+        this.alunoService = alunoService;
     }
 
     @GetMapping("/")
@@ -45,6 +49,7 @@ public class HomeController {
             Model model
     ) {
         String usuario = authentication.getName();
+        String nomeAluno = alunoService.obterAtivoPorUsuario(usuario).getNome();
         List<AnoLetivo> anosLetivos = anoLetivoService.listarDoAluno(usuario);
         AnoLetivo anoSelecionado = selecionarAno(anoLetivoId, anosLetivos);
         List<DisciplinaTarefasView> tarefasPorDisciplina = anoSelecionado != null
@@ -55,7 +60,7 @@ public class HomeController {
                 : List.of();
         int quantidadeTarefas = tarefasPorDisciplina.stream().mapToInt(bloco -> bloco.tarefas().size()).sum();
 
-        model.addAttribute("usuarioLogado", usuario);
+        model.addAttribute("nomeAluno", nomeAluno);
         model.addAttribute("anosLetivos", anosLetivos);
         model.addAttribute("anoSelecionado", anoSelecionado);
         model.addAttribute("filtroSituacao", filtroSituacao);

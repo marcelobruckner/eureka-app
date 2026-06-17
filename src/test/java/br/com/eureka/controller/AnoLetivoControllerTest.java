@@ -1,10 +1,12 @@
 package br.com.eureka.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -18,8 +20,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import br.com.eureka.model.Aluno;
 import br.com.eureka.model.AnoLetivo;
+import br.com.eureka.model.Disciplina;
 import br.com.eureka.repository.AlunoRepository;
 import br.com.eureka.repository.AnoLetivoRepository;
 import br.com.eureka.repository.DisciplinaRepository;
@@ -93,5 +97,34 @@ class AnoLetivoControllerTest {
                         .string(containsString("Corrija os campos destacados para salvar o ano letivo.")))
                 .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
                         .string(containsString("is-invalid")));
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
+    void deveExcluirAnoLetivoSemDisciplinas() throws Exception {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo ano = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+
+        mockMvc.perform(post("/anos-letivos/" + ano.getId() + "/excluir")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/anos-letivos"));
+
+        assertEquals(0, anoLetivoRepository.findByAlunoUsuarioAndExcluidoFalseOrderByAnoDesc("ana").size());
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
+    void deveExibirErroAoTentarExcluirAnoComDisciplina() throws Exception {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo ano = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        disciplinaRepository.save(Disciplina.criar("Matematica", ano));
+
+        mockMvc.perform(post("/anos-letivos/" + ano.getId() + "/excluir")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("anos-letivos"))
+                .andExpect(content().string(containsString("Ano letivo possui disciplinas vinculadas")))
+                .andExpect(content().string(not(containsString("redirect"))));
     }
 }

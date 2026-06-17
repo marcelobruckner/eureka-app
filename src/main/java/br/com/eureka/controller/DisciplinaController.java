@@ -57,6 +57,24 @@ public class DisciplinaController {
         return "redirect:/anos-letivos/" + form.getAnoLetivoId() + "/disciplinas";
     }
 
+    @PostMapping("/disciplinas/{disciplinaId}/excluir")
+    public String excluir(
+            Authentication authentication,
+            @PathVariable Long disciplinaId,
+            Model model
+    ) {
+        String usuario = authentication.getName();
+        Long anoLetivoId = disciplinaService.obterDoAluno(usuario, disciplinaId).getAnoLetivo().getId();
+        try {
+            disciplinaService.excluir(usuario, disciplinaId);
+            return "redirect:/anos-letivos/" + anoLetivoId + "/disciplinas";
+        } catch (IllegalArgumentException e) {
+            carregarTelaInicial(usuario, anoLetivoId, model);
+            model.addAttribute("mensagemErro", e.getMessage());
+            return "disciplinas";
+        }
+    }
+
     private void carregarTelaInicial(String usuario, Long anoLetivoId, Model model) {
         model.addAttribute("disciplinaForm", criarFormComAnoSelecionado(anoLetivoId));
         carregarDadosComplementares(usuario, anoLetivoId, model);

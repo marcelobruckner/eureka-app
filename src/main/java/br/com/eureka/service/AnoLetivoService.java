@@ -5,9 +5,11 @@ import br.com.eureka.model.Aluno;
 import br.com.eureka.model.AnoLetivo;
 import br.com.eureka.repository.AlunoRepository;
 import br.com.eureka.repository.AnoLetivoRepository;
+import br.com.eureka.repository.DisciplinaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.util.List;
 
 @Service
@@ -15,10 +17,19 @@ public class AnoLetivoService {
 
     private final AnoLetivoRepository anoLetivoRepository;
     private final AlunoRepository alunoRepository;
+    private final DisciplinaRepository disciplinaRepository;
+    private final Clock clock;
 
-    public AnoLetivoService(AnoLetivoRepository anoLetivoRepository, AlunoRepository alunoRepository) {
+    public AnoLetivoService(
+            AnoLetivoRepository anoLetivoRepository,
+            AlunoRepository alunoRepository,
+            DisciplinaRepository disciplinaRepository,
+            Clock clock
+    ) {
         this.anoLetivoRepository = anoLetivoRepository;
         this.alunoRepository = alunoRepository;
+        this.disciplinaRepository = disciplinaRepository;
+        this.clock = clock;
     }
 
     public List<AnoLetivo> listarDoAluno(String usuario) {
@@ -41,5 +52,16 @@ public class AnoLetivoService {
                 .orElseThrow(() -> new IllegalArgumentException("Aluno nao encontrado"));
 
         return anoLetivoRepository.save(AnoLetivo.criar(ano, aluno));
+    }
+
+    @Transactional
+    public AnoLetivo excluir(String usuario, Long id) {
+        AnoLetivo anoLetivo = obterDoAluno(usuario, id);
+        if (disciplinaRepository.existsByAnoLetivoAndExcluidoFalse(anoLetivo)) {
+            throw new IllegalArgumentException("Ano letivo possui disciplinas vinculadas");
+        }
+
+        anoLetivo.excluir(usuario, clock);
+        return anoLetivoRepository.save(anoLetivo);
     }
 }

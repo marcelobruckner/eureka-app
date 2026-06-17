@@ -1,6 +1,7 @@
 package br.com.eureka.repository;
 
 import br.com.eureka.model.Tarefa;
+import br.com.eureka.model.Disciplina;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -53,4 +54,6 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
             @Param("usuario") String usuario,
             @Param("tarefaId") Long tarefaId
     );
+
+    boolean existsByDisciplinaAndExcluidoFalse(Disciplina disciplina);
 }

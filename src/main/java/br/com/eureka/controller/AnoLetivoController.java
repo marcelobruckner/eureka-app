@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -41,5 +42,23 @@ public class AnoLetivoController {
 
         anoLetivoService.cadastrar(authentication.getName(), form);
         return "redirect:/anos-letivos";
+    }
+
+    @PostMapping("/anos-letivos/{anoLetivoId}/excluir")
+    public String excluir(
+            Authentication authentication,
+            @PathVariable Long anoLetivoId,
+            Model model
+    ) {
+        String usuario = authentication.getName();
+        try {
+            anoLetivoService.excluir(usuario, anoLetivoId);
+            return "redirect:/anos-letivos";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("anoLetivoForm", new AnoLetivoForm());
+            model.addAttribute("anosLetivos", anoLetivoService.listarDoAluno(usuario));
+            model.addAttribute("mensagemErro", e.getMessage());
+            return "anos-letivos";
+        }
     }
 }

@@ -31,6 +31,12 @@ public class AlunoService {
         return alunoRepository.save(aluno);
     }
 
+    @Transactional(readOnly = true)
+    public Aluno obterAtivoPorUsuario(String usuario) {
+        return alunoRepository.findByUsuarioAndExcluidoFalse(normalizar(usuario))
+                .orElseThrow(() -> new IllegalArgumentException("Aluno nao encontrado"));
+    }
+
     private void validarDisponibilidade(String usuario, String email) {
         String usuarioNormalizado = normalizar(usuario);
         String emailNormalizado = normalizar(email);

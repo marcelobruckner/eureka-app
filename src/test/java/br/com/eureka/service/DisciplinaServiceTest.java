@@ -76,4 +76,32 @@ class DisciplinaServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> disciplinaService.cadastrar("ana", form));
     }
+
+    @Test
+    void deveExcluirDisciplinaSemTarefasVinculadas() {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo ano = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        Disciplina disciplina = disciplinaRepository.save(Disciplina.criar("Matematica", ano));
+
+        disciplinaService.excluir("ana", disciplina.getId());
+
+        assertEquals(0, disciplinaService.listarDoAnoLetivo("ana", ano.getId()).size());
+        assertTrue(disciplinaRepository.findByIdAndAnoLetivoAlunoUsuarioAndExcluidoFalse(disciplina.getId(), "ana").isEmpty());
+    }
+
+    @Test
+    void deveBloquearExclusaoDeDisciplinaComTarefasAtivas() {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo ano = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        Disciplina disciplina = disciplinaRepository.save(Disciplina.criar("Matematica", ano));
+
+        tarefaRepository.save(br.com.eureka.model.Tarefa.criar(
+                "Lista 1",
+                java.time.LocalDate.now(),
+                disciplina,
+                java.time.Clock.system(java.time.ZoneId.of("America/Sao_Paulo"))
+        ));
+
+        assertThrows(IllegalArgumentException.class, () -> disciplinaService.excluir("ana", disciplina.getId()));
+    }
 }
