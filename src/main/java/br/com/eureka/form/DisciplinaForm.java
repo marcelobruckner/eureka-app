@@ -13,6 +13,8 @@ public class DisciplinaForm {
     @Positive(message = "Ano letivo invalido")
     private Long anoLetivoId;
 
+    private Long anoSelecionadoId;
+
     public String getNome() {
         return nome;
     }
@@ -27,5 +29,13 @@ public class DisciplinaForm {
 
     public void setAnoLetivoId(Long anoLetivoId) {
         this.anoLetivoId = anoLetivoId;
+    }
+
+    public Long getAnoSelecionadoId() {
+        return anoSelecionadoId;
+    }
+
+    public void setAnoSelecionadoId(Long anoSelecionadoId) {
+        this.anoSelecionadoId = anoSelecionadoId;
     }
 }

@@ -27,6 +27,7 @@
                     <h2 class="h5 mb-3">Cadastrar disciplina</h2>
                     <form th:action="@{/disciplinas}" th:object="${disciplinaForm}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <input type="hidden" th:field="*{anoSelecionadoId}">
 
                         <div class="mb-3">
                             <label class="form-label" for="nome">Nome</label>

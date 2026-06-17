@@ -31,10 +31,7 @@ public class DisciplinaController {
             Model model
     ) {
         String usuario = authentication.getName();
-        model.addAttribute("anoSelecionado", anoLetivoService.obterDoAluno(usuario, anoLetivoId));
-        model.addAttribute("disciplinaForm", new DisciplinaForm());
-        model.addAttribute("anosLetivos", anoLetivoService.listarDoAluno(usuario));
-        model.addAttribute("disciplinas", disciplinaService.listarDoAnoLetivo(usuario, anoLetivoId));
+        carregarTelaInicial(usuario, anoLetivoId, model);
         return "disciplinas";
     }
 
@@ -47,16 +44,38 @@ public class DisciplinaController {
     ) {
         String usuario = authentication.getName();
         if (bindingResult.hasErrors()) {
-            Long anoLetivoId = form.getAnoLetivoId();
+            Long anoLetivoId = resolverAnoLetivoId(form);
             if (anoLetivoId != null) {
-                model.addAttribute("anoSelecionado", anoLetivoService.obterDoAluno(usuario, anoLetivoId));
-                model.addAttribute("disciplinas", disciplinaService.listarDoAnoLetivo(usuario, anoLetivoId));
+                carregarDadosComplementares(usuario, anoLetivoId, model);
             }
+            model.addAttribute("disciplinaForm", form);
             model.addAttribute("anosLetivos", anoLetivoService.listarDoAluno(usuario));
             return "disciplinas";
         }
 
         disciplinaService.cadastrar(usuario, form);
         return "redirect:/anos-letivos/" + form.getAnoLetivoId() + "/disciplinas";
+    }
+
+    private void carregarTelaInicial(String usuario, Long anoLetivoId, Model model) {
+        model.addAttribute("disciplinaForm", criarFormComAnoSelecionado(anoLetivoId));
+        carregarDadosComplementares(usuario, anoLetivoId, model);
+    }
+
+    private void carregarDadosComplementares(String usuario, Long anoLetivoId, Model model) {
+        model.addAttribute("anoSelecionado", anoLetivoService.obterDoAluno(usuario, anoLetivoId));
+        model.addAttribute("anosLetivos", anoLetivoService.listarDoAluno(usuario));
+        model.addAttribute("disciplinas", disciplinaService.listarDoAnoLetivo(usuario, anoLetivoId));
+    }
+
+    private DisciplinaForm criarFormComAnoSelecionado(Long anoLetivoId) {
+        DisciplinaForm form = new DisciplinaForm();
+        form.setAnoLetivoId(anoLetivoId);
+        form.setAnoSelecionadoId(anoLetivoId);
+        return form;
+    }
+
+    private Long resolverAnoLetivoId(DisciplinaForm form) {
+        return form.getAnoLetivoId() != null ? form.getAnoLetivoId() : form.getAnoSelecionadoId();
     }
 }
