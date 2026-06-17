@@ -129,6 +129,21 @@ class AutenticacaoControllerTest {
 
     @Test
     @WithMockUser(username = "ana")
+    void deveExibirDisciplinaMesmoSemTarefasNoDashboard() throws Exception {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo anoLetivo = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        disciplinaRepository.save(Disciplina.criar("Matematica", anoLetivo));
+
+        mockMvc.perform(get("/inicio"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("inicio"))
+                .andExpect(content().string(containsString("Matematica")))
+                .andExpect(content().string(containsString("Nenhuma tarefa nesta disciplina.")))
+                .andExpect(content().string(not(containsString("Nenhuma disciplina cadastrada para o ano selecionado."))));
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
     void deveExibirComboCompactoQuandoExistiremMaisDeUmAnoLetivo() throws Exception {
         Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
         anoLetivoRepository.save(AnoLetivo.criar(2025, aluno));

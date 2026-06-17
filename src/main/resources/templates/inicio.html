@@ -119,63 +119,57 @@
                 </div>
             </form>
 
-            <div class="row g-3" th:if="${temTarefas}">
-                        <div class="col-12 col-md-6" th:each="bloco : ${tarefasPorDisciplina}">
-                            <div class="card border h-100 task-card">
-                                <div class="card-body p-3 d-flex flex-column">
-                                    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+            <div class="row g-3" th:if="${!#lists.isEmpty(tarefasPorDisciplina)}">
+                <div class="col-12 col-md-6" th:each="bloco : ${tarefasPorDisciplina}">
+                    <div class="card border h-100 task-card">
+                        <div class="card-body p-3 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                <div>
+                                    <div class="fw-semibold" th:text="${bloco.disciplinaNome}"></div>
+                                    <small class="text-muted" th:text="${'Ano ' + anoSelecionado.ano}"></small>
+                                </div>
+                                <a class="btn btn-sm btn-outline-primary"
+                                   th:href="@{|/disciplinas/${bloco.disciplinaId}/tarefas|}">Abrir</a>
+                            </div>
+
+                            <div class="list-group list-group-flush flex-grow-1"
+                                 th:if="${!#lists.isEmpty(bloco.tarefas)}">
+                                <div class="list-group-item px-0"
+                                     th:each="tarefa : ${bloco.tarefas}"
+                                     th:classappend="${tarefa.pendenteVencida} ? ' bg-danger-subtle border-danger-subtle' : (${tarefa.entregueComAtraso} ? ' bg-warning-subtle border-warning-subtle' : (${tarefa.entregue} ? ' bg-success-subtle border-success-subtle' : ' bg-primary-subtle border-primary-subtle'))">
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
                                         <div>
-                                            <div class="fw-semibold" th:text="${bloco.disciplinaNome}"></div>
-                                            <small class="text-muted" th:text="${'Ano ' + anoSelecionado.ano}"></small>
+                                            <div class="fw-semibold" th:text="${tarefa.nome}"></div>
+                                            <small class="text-muted"
+                                                   th:text="${'Prevista: ' + tarefa.dataPrevistaEntrega}"></small>
+                                            <div class="small status-dot"
+                                                 th:classappend="${tarefa.pendenteVencida} ? ' status-vencida' : (${tarefa.entregueComAtraso} ? ' status-atraso' : (${tarefa.entregue} ? ' status-entregue' : ' status-pendente'))"
+                                                 th:text="${tarefa.dataEntrega != null ? (tarefa.entregueComAtraso ? 'Entregue em ' + tarefa.dataEntrega + ' (com atraso)' : 'Entregue em ' + tarefa.dataEntrega) : (tarefa.pendenteVencida ? 'Pendente e vencida' : 'Pendente no prazo')}"></div>
                                         </div>
-                                        <a class="btn btn-sm btn-outline-primary"
-                                           th:href="@{|/disciplinas/${bloco.disciplinaId}/tarefas|}">Abrir</a>
-                                    </div>
-
-                                    <div class="list-group list-group-flush flex-grow-1"
-                                         th:if="${!#lists.isEmpty(bloco.tarefas)}">
-                                        <div class="list-group-item px-0"
-                                             th:each="tarefa : ${bloco.tarefas}"
-                                             th:classappend="${tarefa.pendenteVencida} ? ' bg-danger-subtle border-danger-subtle' : (${tarefa.entregueComAtraso} ? ' bg-warning-subtle border-warning-subtle' : (${tarefa.entregue} ? ' bg-success-subtle border-success-subtle' : ' bg-primary-subtle border-primary-subtle'))">
-                                            <div class="d-flex justify-content-between align-items-start gap-3">
-                                                <div>
-                                                    <div class="fw-semibold" th:text="${tarefa.nome}"></div>
-                                                    <small class="text-muted"
-                                                           th:text="${'Prevista: ' + tarefa.dataPrevistaEntrega}"></small>
-                                                    <div class="small status-dot"
-                                                         th:classappend="${tarefa.pendenteVencida} ? ' status-vencida' : (${tarefa.entregueComAtraso} ? ' status-atraso' : (${tarefa.entregue} ? ' status-entregue' : ' status-pendente'))"
-                                                         th:text="${tarefa.dataEntrega != null ? (tarefa.entregueComAtraso ? 'Entregue em ' + tarefa.dataEntrega + ' (com atraso)' : 'Entregue em ' + tarefa.dataEntrega) : (tarefa.pendenteVencida ? 'Pendente e vencida' : 'Pendente no prazo')}"></div>
-                                                </div>
-                                                <div class="text-end">
-                                                    <span class="badge"
-                                                          th:classappend="${tarefa.pendenteVencida} ? ' text-bg-danger' : (${tarefa.entregueComAtraso} ? ' text-bg-warning' : (${tarefa.entregue} ? ' text-bg-success' : ' text-bg-primary'))"
-                                                          th:text="${tarefa.status}"></span>
-                                                    <div class="small text-muted mt-1"
-                                                         th:text="${tarefa.pendenteVencida ? 'Vencida' : (tarefa.entregueComAtraso ? 'Entregue com atraso' : (tarefa.entregue ? 'Entregue' : 'Pendente no prazo'))}"></div>
-                                                </div>
-                                            </div>
+                                        <div class="text-end">
+                                            <span class="badge"
+                                                  th:classappend="${tarefa.pendenteVencida} ? ' text-bg-danger' : (${tarefa.entregueComAtraso} ? ' text-bg-warning' : (${tarefa.entregue} ? ' text-bg-success' : ' text-bg-primary'))"
+                                                  th:text="${tarefa.status}"></span>
+                                            <div class="small text-muted mt-1"
+                                                 th:text="${tarefa.pendenteVencida ? 'Vencida' : (tarefa.entregueComAtraso ? 'Entregue com atraso' : (tarefa.entregue ? 'Entregue' : 'Pendente no prazo'))}"></div>
                                         </div>
-                                    </div>
-
-                                    <div class="empty-state mt-auto" th:if="${#lists.isEmpty(bloco.tarefas)}">
-                                        <div class="fw-semibold">Nenhuma tarefa nesta disciplina.</div>
-                                        <div class="text-muted small mt-1">Abra a disciplina para cadastrar a primeira tarefa.</div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="empty-state mt-auto" th:if="${#lists.isEmpty(bloco.tarefas)}">
+                                <div class="fw-semibold">Nenhuma tarefa nesta disciplina.</div>
+                                <div class="text-muted small mt-1">Abra a disciplina para cadastrar a primeira tarefa.</div>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
             <div class="empty-state" th:if="${anoSelecionado == null and #lists.isEmpty(tarefasPorDisciplina)}">
                 <div class="fw-semibold">Nenhum ano letivo cadastrado.</div>
                 <div class="text-muted small mt-1">Cadastre um ano letivo para visualizar disciplinas e tarefas.</div>
                 <a class="btn btn-sm btn-primary mt-3" th:href="@{/anos-letivos}">Cadastrar ano letivo</a>
-            </div>
-            <div class="empty-state" th:if="${anoSelecionado != null and !temTarefas and !#lists.isEmpty(tarefasPorDisciplina)}">
-                <div class="fw-semibold">Nenhuma tarefa corresponde ao filtro selecionado.</div>
-                <div class="text-muted small mt-1">Tente a opção “Todas” para voltar a ver o conjunto completo.</div>
-                <a class="btn btn-sm btn-outline-primary mt-3"
-                   th:href="@{|/inicio?anoLetivoId=${anoSelecionado.id}&situacaoTarefa=TODAS|}">Ver todas</a>
             </div>
             <div class="empty-state" th:if="${anoSelecionado != null and #lists.isEmpty(tarefasPorDisciplina)}">
                 <div class="fw-semibold">Nenhuma disciplina cadastrada para o ano selecionado.</div>

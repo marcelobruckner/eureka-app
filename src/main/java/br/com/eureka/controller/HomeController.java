@@ -70,7 +70,6 @@ public class HomeController {
         model.addAttribute("quantidadeTarefas", quantidadeTarefas);
         model.addAttribute("disciplinas", disciplinas);
         model.addAttribute("tarefasPorDisciplina", tarefasPorDisciplina);
-        model.addAttribute("temTarefas", tarefasPorDisciplina.stream().anyMatch(bloco -> !bloco.tarefas().isEmpty()));
         return "inicio";
     }
 
