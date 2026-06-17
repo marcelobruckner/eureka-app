@@ -92,7 +92,7 @@ Status: `CONCLUIDA`
 
 ### Fase 6: Dashboard interativo
 
-Status: `PENDENTE`
+Status: `CONCLUIDA`
 
 - Melhorar a tela inicial apos login.
 - Agrupar tarefas por disciplina.

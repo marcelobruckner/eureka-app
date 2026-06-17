@@ -3,6 +3,7 @@ package br.com.eureka.service;
 import br.com.eureka.form.ConcluirTarefaForm;
 import br.com.eureka.form.TarefaForm;
 import br.com.eureka.model.Disciplina;
+import br.com.eureka.model.FiltroSituacaoTarefa;
 import br.com.eureka.model.Tarefa;
 import br.com.eureka.repository.TarefaRepository;
 import br.com.eureka.view.DisciplinaTarefasView;
@@ -31,15 +32,30 @@ public class TarefaService {
 
     @Transactional(readOnly = true)
     public List<TarefaResumoView> listarDaDisciplina(String usuario, Long disciplinaId) {
+        return listarDaDisciplina(usuario, disciplinaId, FiltroSituacaoTarefa.TODAS);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TarefaResumoView> listarDaDisciplina(String usuario, Long disciplinaId, FiltroSituacaoTarefa filtro) {
         LocalDate referencia = hoje();
         return tarefaRepository.findByDisciplinaAndUsuarioOrderByDataPrevistaEntregaAscNomeAsc(usuario, disciplinaId)
                 .stream()
                 .map(tarefa -> toResumo(tarefa, referencia))
+                .filter(tarefa -> correspondeAoFiltro(tarefa, filtro))
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public List<DisciplinaTarefasView> listarAgrupadasPorAnoLetivo(String usuario, Long anoLetivoId) {
+        return listarAgrupadasPorAnoLetivo(usuario, anoLetivoId, FiltroSituacaoTarefa.TODAS);
+    }
+
+    @Transactional(readOnly = true)
+    public List<DisciplinaTarefasView> listarAgrupadasPorAnoLetivo(
+            String usuario,
+            Long anoLetivoId,
+            FiltroSituacaoTarefa filtro
+    ) {
         LocalDate referencia = hoje();
         List<Disciplina> disciplinas = disciplinaService.listarDoAnoLetivo(usuario, anoLetivoId);
         List<Tarefa> tarefas = tarefaRepository.findByAnoLetivoAndUsuarioOrderByDisciplinaNomeAscDataPrevistaEntregaAscNomeAsc(usuario, anoLetivoId);
@@ -49,7 +65,10 @@ public class TarefaService {
             agrupadas.put(disciplina.getId(), new java.util.ArrayList<>());
         }
         for (Tarefa tarefa : tarefas) {
-            agrupadas.get(tarefa.getDisciplina().getId()).add(toResumo(tarefa, referencia));
+            TarefaResumoView resumo = toResumo(tarefa, referencia);
+            if (correspondeAoFiltro(resumo, filtro)) {
+                agrupadas.get(tarefa.getDisciplina().getId()).add(resumo);
+            }
         }
 
         return disciplinas.stream()
@@ -99,5 +118,18 @@ public class TarefaService {
 
     private LocalDate hoje() {
         return LocalDate.now(clock);
+    }
+
+    private boolean correspondeAoFiltro(TarefaResumoView tarefa, FiltroSituacaoTarefa filtro) {
+        if (filtro == null || filtro == FiltroSituacaoTarefa.TODAS) {
+            return true;
+        }
+        return switch (filtro) {
+            case PENDENTE -> tarefa.isPendenteNoPrazo();
+            case VENCIDA -> tarefa.isPendenteVencida();
+            case ENTREGUE -> tarefa.isEntregue();
+            case ENTREGUE_COM_ATRASO -> tarefa.isEntregueComAtraso();
+            case TODAS -> true;
+        };
     }
 }

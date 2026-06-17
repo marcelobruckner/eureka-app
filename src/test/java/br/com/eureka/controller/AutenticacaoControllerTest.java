@@ -25,6 +25,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -112,6 +113,36 @@ class AutenticacaoControllerTest {
                 .andExpect(content().string(containsString("Matematica")))
                 .andExpect(content().string(containsString("2026")))
                 .andExpect(content().string(containsString("Lista 1")));
+    }
+
+    @Test
+    @WithMockUser(username = "ana")
+    void deveFiltrarDashboardPorSituacaoDaTarefa() throws Exception {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo anoLetivo = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        Disciplina disciplina = disciplinaRepository.save(Disciplina.criar("Matematica", anoLetivo));
+
+        tarefaRepository.save(Tarefa.criar(
+                "Lista vencida",
+                LocalDate.now(TIME_ZONE).minusDays(1),
+                disciplina,
+                Clock.fixed(Instant.parse("2026-06-15T12:00:00Z"), TIME_ZONE)
+        ));
+        Tarefa entregue = tarefaRepository.save(Tarefa.criar(
+                "Lista entregue",
+                LocalDate.now(TIME_ZONE),
+                disciplina,
+                Clock.fixed(Instant.parse("2026-06-16T12:00:00Z"), TIME_ZONE)
+        ));
+        entregue.entregarEm(LocalDate.now(TIME_ZONE));
+
+        mockMvc.perform(get("/inicio")
+                        .param("anoLetivoId", anoLetivo.getId().toString())
+                        .param("situacaoTarefa", "VENCIDA"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("inicio"))
+                .andExpect(content().string(containsString("Lista vencida")))
+                .andExpect(content().string(not(containsString("Lista entregue"))));
     }
 
     @Test

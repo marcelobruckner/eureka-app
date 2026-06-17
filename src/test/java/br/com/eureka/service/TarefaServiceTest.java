@@ -5,6 +5,7 @@ import br.com.eureka.form.TarefaForm;
 import br.com.eureka.model.Aluno;
 import br.com.eureka.model.AnoLetivo;
 import br.com.eureka.model.Disciplina;
+import br.com.eureka.model.FiltroSituacaoTarefa;
 import br.com.eureka.model.StatusTarefa;
 import br.com.eureka.model.SituacaoPrazoTarefa;
 import br.com.eureka.model.Tarefa;
@@ -116,6 +117,40 @@ class TarefaServiceTest {
         assertEquals("Matematica", blocos.get(0).disciplinaNome());
         assertEquals(1, blocos.get(0).tarefas().size());
         assertEquals("Portugues", blocos.get(1).disciplinaNome());
+    }
+
+    @Test
+    void deveFiltrarTarefasAgrupadasPorSituacao() {
+        Aluno aluno = alunoRepository.save(Aluno.criar("Ana", "ana@escola.com", "ana", "senha"));
+        AnoLetivo anoLetivo = anoLetivoRepository.save(AnoLetivo.criar(2026, aluno));
+        Disciplina matematica = disciplinaRepository.save(Disciplina.criar("Matematica", anoLetivo));
+
+        Clock clockCriacao = Clock.fixed(Instant.parse("2026-06-15T12:00:00Z"), TIME_ZONE);
+        Tarefa pendente = tarefaRepository.save(Tarefa.criar("Pendente", LocalDate.of(2026, 6, 17), matematica, clockCriacao));
+        Tarefa vencida = tarefaRepository.save(Tarefa.criar("Vencida", LocalDate.of(2026, 6, 16), matematica, clockCriacao));
+
+        Tarefa entregue = tarefaRepository.save(Tarefa.criar("Entregue", LocalDate.of(2026, 6, 16), matematica, clockCriacao));
+        entregue.entregarEm(LocalDate.of(2026, 6, 16));
+
+        Tarefa entregueComAtraso = tarefaRepository.save(Tarefa.criar("Atraso", LocalDate.of(2026, 6, 16), matematica, clockCriacao));
+        entregueComAtraso.entregarEm(LocalDate.of(2026, 6, 17));
+
+        List<DisciplinaTarefasView> todas = tarefaService.listarAgrupadasPorAnoLetivo("ana", anoLetivo.getId(), FiltroSituacaoTarefa.TODAS);
+        List<DisciplinaTarefasView> pendentes = tarefaService.listarAgrupadasPorAnoLetivo("ana", anoLetivo.getId(), FiltroSituacaoTarefa.PENDENTE);
+        List<DisciplinaTarefasView> vencidas = tarefaService.listarAgrupadasPorAnoLetivo("ana", anoLetivo.getId(), FiltroSituacaoTarefa.VENCIDA);
+        List<DisciplinaTarefasView> entregues = tarefaService.listarAgrupadasPorAnoLetivo("ana", anoLetivo.getId(), FiltroSituacaoTarefa.ENTREGUE);
+        List<DisciplinaTarefasView> atrasadas = tarefaService.listarAgrupadasPorAnoLetivo("ana", anoLetivo.getId(), FiltroSituacaoTarefa.ENTREGUE_COM_ATRASO);
+
+        assertEquals(1, todas.size());
+        assertEquals(4, todas.get(0).tarefas().size());
+        assertEquals(1, pendentes.get(0).tarefas().size());
+        assertEquals("Pendente", pendentes.get(0).tarefas().get(0).nome());
+        assertEquals(1, vencidas.get(0).tarefas().size());
+        assertEquals("Vencida", vencidas.get(0).tarefas().get(0).nome());
+        assertEquals(1, entregues.get(0).tarefas().size());
+        assertEquals("Entregue", entregues.get(0).tarefas().get(0).nome());
+        assertEquals(1, atrasadas.get(0).tarefas().size());
+        assertEquals("Atraso", atrasadas.get(0).tarefas().get(0).nome());
     }
 
     @Test

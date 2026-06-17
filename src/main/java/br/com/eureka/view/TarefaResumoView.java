@@ -17,4 +17,20 @@ public record TarefaResumoView(
     public boolean isVencida() {
         return situacaoPrazo == SituacaoPrazoTarefa.VENCIDA;
     }
+
+    public boolean isPendenteNoPrazo() {
+        return status == StatusTarefa.PENDENTE && situacaoPrazo == SituacaoPrazoTarefa.NO_PRAZO;
+    }
+
+    public boolean isPendenteVencida() {
+        return status == StatusTarefa.PENDENTE && situacaoPrazo == SituacaoPrazoTarefa.VENCIDA;
+    }
+
+    public boolean isEntregue() {
+        return status == StatusTarefa.ENTREGUE;
+    }
+
+    public boolean isEntregueComAtraso() {
+        return status == StatusTarefa.ENTREGUE_COM_ATRASO;
+    }
 }

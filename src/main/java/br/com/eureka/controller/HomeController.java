@@ -1,17 +1,18 @@
 package br.com.eureka.controller;
 
 import br.com.eureka.model.AnoLetivo;
+import br.com.eureka.model.FiltroSituacaoTarefa;
+import br.com.eureka.view.DisciplinaTarefasView;
 import br.com.eureka.service.AnoLetivoService;
 import br.com.eureka.service.DisciplinaService;
 import br.com.eureka.service.TarefaService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.Clock;
-import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -19,18 +20,15 @@ public class HomeController {
     private final AnoLetivoService anoLetivoService;
     private final DisciplinaService disciplinaService;
     private final TarefaService tarefaService;
-    private final Clock clock;
 
     public HomeController(
             AnoLetivoService anoLetivoService,
             DisciplinaService disciplinaService,
-            TarefaService tarefaService,
-            Clock clock
+            TarefaService tarefaService
     ) {
         this.anoLetivoService = anoLetivoService;
         this.disciplinaService = disciplinaService;
         this.tarefaService = tarefaService;
-        this.clock = clock;
     }
 
     @GetMapping("/")
@@ -42,26 +40,31 @@ public class HomeController {
     public String inicio(
             Authentication authentication,
             @RequestParam(name = "anoLetivoId", required = false) Long anoLetivoId,
+            @RequestParam(name = "situacaoTarefa", required = false, defaultValue = "TODAS")
+            FiltroSituacaoTarefa filtroSituacao,
             Model model
     ) {
         String usuario = authentication.getName();
-        var anosLetivos = anoLetivoService.listarDoAluno(usuario);
+        List<AnoLetivo> anosLetivos = anoLetivoService.listarDoAluno(usuario);
         AnoLetivo anoSelecionado = selecionarAno(anoLetivoId, anosLetivos);
+        List<DisciplinaTarefasView> tarefasPorDisciplina = anoSelecionado != null
+                ? tarefaService.listarAgrupadasPorAnoLetivo(usuario, anoSelecionado.getId(), filtroSituacao)
+                : List.of();
 
         model.addAttribute("usuarioLogado", usuario);
         model.addAttribute("anosLetivos", anosLetivos);
         model.addAttribute("anoSelecionado", anoSelecionado);
+        model.addAttribute("filtroSituacao", filtroSituacao);
+        model.addAttribute("filtrosSituacao", List.of(FiltroSituacaoTarefa.values()));
         model.addAttribute("disciplinas", anoSelecionado != null
                 ? disciplinaService.listarDoAnoLetivo(usuario, anoSelecionado.getId())
-                : java.util.List.of());
-        model.addAttribute("tarefasPorDisciplina", anoSelecionado != null
-                ? tarefaService.listarAgrupadasPorAnoLetivo(usuario, anoSelecionado.getId())
-                : java.util.List.of());
-        model.addAttribute("dataReferencia", LocalDate.now(clock));
+                : List.of());
+        model.addAttribute("tarefasPorDisciplina", tarefasPorDisciplina);
+        model.addAttribute("temTarefas", tarefasPorDisciplina.stream().anyMatch(bloco -> !bloco.tarefas().isEmpty()));
         return "inicio";
     }
 
-    private AnoLetivo selecionarAno(Long anoLetivoId, java.util.List<AnoLetivo> anosLetivos) {
+    private AnoLetivo selecionarAno(Long anoLetivoId, List<AnoLetivo> anosLetivos) {
         if (anosLetivos.isEmpty()) {
             return null;
         }

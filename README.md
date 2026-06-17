@@ -10,7 +10,7 @@ Sistema web para gestao de tarefas escolares de alunos.
 - Cadastro, consulta e conclusao de tarefas por disciplina.
 - Identificacao automatica de tarefa entregue com atraso.
 - Calculo de tarefas vencidas sem gravar `VENCIDA` no banco.
-- Dashboard com tarefas exibidas dentro dos cards das disciplinas, sem duplicacao de informacoes.
+- Dashboard com tarefas exibidas dentro dos cards das disciplinas, com filtro de situacao e sem duplicacao de informacoes.
 
 ## Stack
 
@@ -67,7 +67,7 @@ Sistema web para gestao de tarefas escolares de alunos.
 - Fase 3: Concluida
 - Fase 4: Concluida
 - Fase 5: Concluida
-- Fase 6: Pendente
+- Fase 6: Concluida
 - Fase 7: Pendente
 - Fase 8: Pendente
 
